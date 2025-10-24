@@ -132,9 +132,7 @@ systemctl status docker-netns-ipforward.service
 Verify IP forwarding is enabled in all Docker network namespaces:
 
 ```bash
-for netns in /run/docker/netns/*; do
-    echo "$(basename $netns): $(nsenter --net="$netns" cat /proc/sys/net/ipv4/ip_forward)"
-done
+sudo bash -c 'for netns in /run/docker/netns/*; do echo "$(basename $netns): $(nsenter --net="$netns" cat /proc/sys/net/ipv4/ip_forward)"; done'
 ```
 
 All namespaces should show `1`.
