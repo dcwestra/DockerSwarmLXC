@@ -16,7 +16,7 @@ According to Docker documentation, docker should automatically enable IP forward
 
 You can confirm that IP forwarding is source of your problems by running these commands:
 
-```
+```bash
 # This checks just the default ingress network:
 sudo nsenter --net=/run/docker/netns/ingress_sbox cat /proc/sys/net/ipv4/ip_forward
 
@@ -42,11 +42,13 @@ You can copy and past everything below, or use the files in this repository.
 
 ### 1. Configure the LXC container
 
-On your Proxmox host, edit the LXC configuration file at `/etc/pve/lxc/<VMID>.conf` and add:
+On your Proxmox host, edit the LXC configuration file at `/etc/pve/lxc/<LXC-ID>.conf` and add:
 
 ```
-lxc.sysctl.net.ipv4.ip_forward = 1
-features: nesting=1
+features: nesting=1,keyctl=1
+lxc.apparmor.profile: unconfined
+lxc.cgroup2.devices.allow: a
+lxc.cap.drop: 
 ```
 
 Restart the LXC container after making this change.
