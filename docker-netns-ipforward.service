@@ -1,0 +1,13 @@
+[Unit]
+Description=Enable IP forwarding in all Docker network namespaces
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/docker-netns-ipforward.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
