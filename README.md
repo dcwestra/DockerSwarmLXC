@@ -38,7 +38,7 @@ This solution uses a monitoring script that automatically enables IP forwarding 
 
 ## Installation
 
-You can copy and past everything below, or use the files in this repository.
+You must apply this fix to all lxc nodes in your swarm. You can copy and past everything below, or use the files in this repository.
 
 ### 1. Configure the LXC container
 
@@ -155,19 +155,6 @@ This approach handles both persistent configuration across reboots and dynamic n
 ## Multi-node swarms
 
 For Docker Swarm clusters with multiple nodes, install this solution on all manager and worker nodes.
-
-## Technical background
-
-Docker Swarm creates isolated network namespaces for overlay networks (ingress, service networks, load balancer namespaces). Each namespace has its own network stack with independent sysctl settings. By default, new network namespaces have `ip_forward=0`.
-
-With the legacy iptables backend, Docker automatically enables IP forwarding in these namespaces. However, the nftables backend is experimental and does not handle this automatically. In LXC containers, the namespaces also do not inherit the setting from the container itself, requiring explicit configuration.
-
-## Alternatives considered
-
-- Switching to iptables-legacy: This did not resolve the issue in testing
-- Using `sysctl` command directly: Not available in minimal namespace environments
-- Docker daemon configuration: No options exist for network namespace sysctls
-- Compose file configuration: Container sysctls do not apply to network namespaces
 
 ## License
 
